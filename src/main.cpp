@@ -14,7 +14,7 @@ void setupCertificates();
 void setupMqtt();
 void callback(char *topic, byte *payload, unsigned int length);
 
-// Cliente MQTT
+// MQTT client
 
 WiFiClientSecure net;
 PubSubClient client(net);
@@ -70,12 +70,13 @@ void setupCertificates() {
 }
 
 void callback(char *topic, byte *payload, unsigned int length) {
-  // Alocar um buffer para o payload
+  // Allocates a buffer to store the message
+
   char *message = (char *)malloc(length + 1);
 
   memcpy(message, payload, length);
 
-  message[length] = '\0'; // Adicionar terminador nulo
+  message[length] = '\0'; // Adds a null terminator to the end of the message
 
   Serial.print("Mensagem recebida [");
 
@@ -84,10 +85,12 @@ void callback(char *topic, byte *payload, unsigned int length) {
   Serial.print("]: ");
   Serial.println(message);
 
-  // Alocar um buffer para o JSON
+  // Parse the JSON
+
   JsonDocument doc;
 
-  // Analisar o JSON
+  // Deserialize the JSON document
+
   DeserializationError error = deserializeJson(doc, message);
 
   if (error) {
@@ -95,15 +98,13 @@ void callback(char *topic, byte *payload, unsigned int length) {
 
     Serial.println(error.c_str());
   } else {
-    // Verificar o comando
-
     const char *command = doc["message"];
 
     if (strcmp(command, "turn-on") == 0) {
 
       digitalWrite(LED_PIN, HIGH);
 
-      // Enviar status em JSON
+      // Send status in JSON
 
       JsonDocument statusDoc;
 
@@ -117,7 +118,7 @@ void callback(char *topic, byte *payload, unsigned int length) {
     } else if (strcmp(command, "turn-off") == 0) {
       digitalWrite(LED_PIN, LOW);
 
-      // Enviar status em JSON
+      // Send status in JSON
 
       JsonDocument statusDoc;
 
@@ -133,7 +134,7 @@ void callback(char *topic, byte *payload, unsigned int length) {
     }
   }
 
-  // Liberar a memória alocada
+  // Free the buffer
 
   free(message);
 }
