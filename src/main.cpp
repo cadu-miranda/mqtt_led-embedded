@@ -149,7 +149,7 @@ void reconnect() {
 
     Serial.print("Tentando conectar ao MQTT...");
 
-    if (client.connect("esp-32")) {
+    if (client.connect(THINGNAME)) {
 
       Serial.println("Conectado");
 
