@@ -9,9 +9,14 @@
 const char *pubTopic = "esp32/pub";
 const char *subTopic = "esp32/sub";
 
+// Function prototypes
+
 void setupWifi();
+
 void setupCertificates();
+
 void setupMqtt();
+
 void callback(char *topic, byte *payload, unsigned int length);
 
 // MQTT client
